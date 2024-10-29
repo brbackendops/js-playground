@@ -47,6 +47,22 @@ function createCell(type) {
             editor.style.height = editor.scrollHeight + 'px';
         });
 
+        editor.addEventListener('keydown',(e) => {
+            console.log("hiss")
+            if (e.key === 'Tab') {
+                e.preventDefault()
+
+                var start = editor.selectionStart;
+                var end = editor.selectionEnd;
+                var space = "       "
+
+                editor.value = editor.value.substring(0,start) + space + editor.value.substring(end);
+
+                editor.selectionStart = editor.selectionEnd = start + 1;
+            }
+            
+        });            
+
     } else {
         const editor = document.createElement('textarea')
         editor.className = 'text-editor'
@@ -57,7 +73,7 @@ function createCell(type) {
         editor.addEventListener('input',() => {
             editor.style.height = "auto"
             editor.style.height = editor.scrollHeight + 'px';
-        })
+        });    
     }
 
     
@@ -110,11 +126,12 @@ function executeCode(editor,output) {
   }
 }
 
-
-window.addCell = function(type) {
-    const notebook = document.getElementById("notebook")
-    const cell = createCell(type)
-    notebook.insertBefore(cell, notebook.lastElementChild)
+window.onload = () => {
+    window.addCell = function(type) {
+        const notebook = document.getElementById("notebook")
+        const cell = createCell(type)
+        notebook.insertBefore(cell, notebook.lastElementChild)
+    }
+    
+    addCell('code')
 }
-
-addCell('code')
